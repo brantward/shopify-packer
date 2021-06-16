@@ -4,7 +4,7 @@ const {merge} = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
-const IncludeLiquidStylesPlugin = require('../include-liquid-styles');
+//const IncludeLiquidStylesPlugin = require('../include-liquid-styles');
 const PackerConfig = require('../../config');
 const config = new PackerConfig(require('../../../packer.schema'));
 const development = false;
@@ -22,7 +22,7 @@ const scss = require('../parts/scss');
 const assets = require('../parts/assets');
 const copy = require('../parts/copy');
 const optimization = require('../parts/optimization');
-const liquidStyles = require('../parts/liquid-styles');
+//const liquidStyles = require('../parts/liquid-styles');
 const mergeProd = customConfigCheck(config.get('merge.prod'));
 
 core.entry = {
@@ -32,7 +32,7 @@ core.entry = {
 };
 
 const output = merge([
-  liquidStyles,
+  //liquidStyles,
   core,
   assets,
   scss,
@@ -62,7 +62,7 @@ const output = merge([
       new HtmlWebpackPlugin({
         excludeChunks: ['static'],
         filename: `${config.get('theme.dist.snippets')}/script-tags.liquid`,
-        template: path.resolve(__dirname, '../script-tags.html'),
+        template: path.resolve(__dirname, '../script-tags.webpack'),
         inject: false,
         showErrors: true,
         minify: {
@@ -79,7 +79,7 @@ const output = merge([
       new HtmlWebpackPlugin({
         excludeChunks: ['static'],
         filename: `${config.get('theme.dist.snippets')}/style-tags.liquid`,
-        template: path.resolve(__dirname, '../style-tags.html'),
+        template: path.resolve(__dirname, '../style-tags.webpack'),
         inject: false,
         minify: {
           removeComments: true,
@@ -91,7 +91,7 @@ const output = merge([
         liquidTemplates: config.get('files.template'),
         liquidLayouts: config.get('files.layout'),
       }),
-      new IncludeLiquidStylesPlugin(),
+      //new IncludeLiquidStylesPlugin(),
     ],
   },
   mergeProd,

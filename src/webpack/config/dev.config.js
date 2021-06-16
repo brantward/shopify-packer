@@ -14,7 +14,7 @@ const core = require('../parts/core');
 const css = require('../parts/css');
 const scss = require('../parts/scss');
 const assets = require('../parts/assets');
-const liquidStyles = require('../parts/liquid-styles');
+//const liquidStyles = require('../parts/liquid-styles');
 const copy = require('../parts/copy');
 
 const mergeDev = customConfigCheck(config.get('merge.dev'));
@@ -34,7 +34,7 @@ Object.keys(core.entry).forEach((name) => {
 });
 
 module.exports = merge([
-  liquidStyles,
+  //liquidStyles,
   core,
   assets,
   scss,
@@ -74,7 +74,7 @@ module.exports = merge([
       new HtmlWebpackPlugin({
         excludeChunks: ['static'],
         filename: `${config.get('theme.dist.snippets')}/script-tags.liquid`,
-        template: path.resolve(__dirname, '../script-tags.html'),
+        template: path.resolve(__dirname, '../script-tags.webpack'),
         inject: false,
         minify: {
           removeComments: true,
@@ -88,7 +88,7 @@ module.exports = merge([
       new HtmlWebpackPlugin({
         excludeChunks: ['static'],
         filename: `${config.get('theme.dist.snippets')}/style-tags.liquid`,
-        template: path.resolve(__dirname, '../style-tags.html'),
+        template: path.resolve(__dirname, '../style-tags.webpack'),
         inject: false,
         minify: {
           removeComments: true,
@@ -99,10 +99,10 @@ module.exports = merge([
         liquidLayouts: config.get('files.layout'),
       }),
 
-      new HtmlWebpackTagsPlugin({
-        links: ['layout.theme.styleLiquid.css'],
-        append: true,
-      }),
+      // new HtmlWebpackTagsPlugin({
+      //   links: ['layout.theme.styleLiquid.css'],
+      //   append: true,
+      // }),
     ],
   },
   mergeDev,
