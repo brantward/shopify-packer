@@ -12,8 +12,12 @@ process.env.NODE_ENV = 'production';
 const {customConfigCheck} = require('../custom');
 const getLayoutEntrypoints = require('../../utilities/get-layout-entrypoints');
 const getTemplateEntrypoints = require('../../utilities/get-template-entrypoints');
+const getCritLayoutEntrypoints = require('../../utilities/get-crit-css-layout-entrypoints');
+const getCritTemplateEntrypoints = require('../../utilities/get-crit-css-template-entrypoints');
 config.set('files.layout', getLayoutEntrypoints());
 config.set('files.template', getTemplateEntrypoints());
+config.set('files.crit.layout', getCritLayoutEntrypoints());
+config.set('files.crit.template', getCritTemplateEntrypoints());
 
 // Parts
 const core = require('../parts/core');
@@ -28,6 +32,8 @@ const mergeProd = customConfigCheck(config.get('merge.prod'));
 core.entry = {
   ...config.get('files.layout'),
   ...config.get('files.template'),
+  ...config.get('files.crit.layout'),
+  ...config.get('files.crit.template'),
   ...config.get('entrypoints'),
 };
 
@@ -51,8 +57,18 @@ const output = merge([
         ],
       }),
 
+      // new MiniCssExtractPlugin({
+      //   filename: '[name].oo.css',
+      // }),
+
       new MiniCssExtractPlugin({
-        filename: '[name].css',
+        filename: (chunkData) => {
+          //console.log(chunkData.chunk);
+          const criticalNamespace = '.critical';
+          return chunkData.chunk.runtime.includes(criticalNamespace)
+            ? `../.ignore/[name].css`
+            : `[name].css`;
+        },
       }),
 
       new webpack.DefinePlugin({
@@ -88,6 +104,8 @@ const output = merge([
           preserveLineBreaks: true,
         },
         isDevServer: development,
+        criticalTemplates: config.get('files.crit.template'),
+        criticalLayouts: config.get('files.crit.layout'),
         liquidTemplates: config.get('files.template'),
         liquidLayouts: config.get('files.layout'),
       }),

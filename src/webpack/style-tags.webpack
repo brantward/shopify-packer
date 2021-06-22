@@ -1,59 +1,144 @@
-<% for (var css in htmlWebpackPlugin.files.css) { %>
-  <% var basename = htmlWebpackPlugin.files.css[css].split('/').reverse()[0]; %>
-  <%= htmlWebpackPlugin.files.css %>
-  <% var chunkName = basename.replace('.scss', '').replace('.css', '').replace('.styleLiquid', ''); %>
-  <% var isLiquidStyle = /.liquidStyle.css$/.test(basename) %>
-  <% if (htmlWebpackPlugin.options.isDevServer === true && !basename.includes('.styleLiquid')) { %>
+<% 
+  var styles = [];
+  var loadcss = [];
+  var fetchcss = [];
+  function createStyles(condition, load, fetch) {
+    if (condition) {
+      if (!styles.includes(condition)) {
+        styles.push(condition);
+      }
+      if (load) {
+        loadcss[condition] = loadcss[condition] || [];
+        loadcss[condition].push(load);
+      }
+      if (fetch) {
+        fetchcss[condition] = fetchcss[condition] || [];
+        fetchcss[condition].push(fetch);
+      }
+    }
+  }
+  
+  for (var chunk in htmlWebpackPlugin.files.css) {
+    var cssFile = htmlWebpackPlugin.files.css[chunk];
+  
+    var basename = cssFile.split('/').reverse()[0];
+    var chunkName = basename
+      .replace('.scss', '')
+      .replace('.css', '')
+      .replace('.styleLiquid', '');
+    var critChunkName = chunkName.replace('.critical', '');
+    var isLiquidStyle = /.liquidStyle.css$/.test(basename);
+  
+    if (htmlWebpackPlugin.options.isDevServer === true && !basename.includes('.styleLiquid')) {
+      var src = cssFile;
+    } else {
+      var src = `{{ '${basename}' | asset_url }}`;
+    }
+  
+    var stylesheet = `<link rel="stylesheet" href="${src}" type="text/css">`;
+    var prefetch = `<link rel="prefetch" href="${src}" as="style">`;
+    var preload = `<link rel="preload" href="${src}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${src}"></noscript>`;
+    var inline = compilation.assets[cssFile.substr(htmlWebpackPlugin.files.publicPath.length)].source().trim();
+    if (inline.length) {
+      inline = `<style>${inline}</style>`;
+    }
+  
+    if (typeof htmlWebpackPlugin.options.criticalLayouts[chunkName] !== 'undefined') {
 
-    <% var src = htmlWebpackPlugin.files.css[css] %>
-  <% } else { %>
-    <% var src = `{{ '${basename}' | asset_url }}` %>
-  <% } %>
+      createStyles(
+        `if layout == '${chunkName.split('.')[1]}'`, 
+        inline
+      );
 
-  <% var stylesheet = `<link rel="stylesheet" href="${src}" type="text/css">` %>
-  <% var prefetch = `<link rel="prefetch" href="${src}" as="style">` %>
-  <% var preload = `<link rel="preload" href="${src}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${src}"></noscript>` %>
+    } else if (typeof htmlWebpackPlugin.options.criticalTemplates[chunkName] !== 'undefined') {
 
-  <% if (typeof htmlWebpackPlugin.options.liquidTemplates[chunkName] !== 'undefined') { %>
-    <% var chunkTemplate = htmlWebpackPlugin.options.liquidTemplates[chunkName] %>
-    <% if (chunkTemplate.includes('customers/') || chunkTemplate.includes('customers\\')) { %>
-      {%- if template == 'customers/<%= chunkName.split('.').slice(1).join('.') %>' -%}
-        <%= preload %>
-      {%- else -%}
-        <%= prefetch %>
-      {%- endif -%}
-    <% } else { %>
-      {%- if template == '<%= chunkName.split('.').slice(1).join('.') %>' -%}
-        <%= preload %>
-      {%- else -%}
-        <%= prefetch %>
-      {%- endif -%}
+      var chunkTemplate = htmlWebpackPlugin.options.criticalTemplates[chunkName].import;
+      var templateName = chunkName.split('.').slice(1, -1).join('.');
+
+      if (
+        chunkTemplate.includes('customers/') ||
+        chunkTemplate.includes('customers\\')
+      ) {
+        var templateName = `customers/${templateName}`;
+      }
+      
+      createStyles(
+        `if template == '${templateName}'`, 
+        inline
+      );
+
+    } else if (typeof htmlWebpackPlugin.options.liquidTemplates[chunkName] !== 'undefined') {
+      var chunkTemplate = htmlWebpackPlugin.options.liquidTemplates[chunkName];
+      var templateName = chunkName.split('.').slice(1).join('.');
+
+      if (
+        chunkTemplate.includes('customers/') ||
+        chunkTemplate.includes('customers\\')
+      ) {
+        var templateName = `customers/${templateName}`;
+      }
+  
+      createStyles(
+        `if template == '${templateName}'`, 
+        preload, 
+        prefetch
+      );
+
+    } else if (typeof htmlWebpackPlugin.options.liquidLayouts[chunkName] !== 'undefined') {
+
+      createStyles(
+        `if layout == '${chunkName.split('.')[1]}'`, 
+        preload
+      );
+
+    } else if (chunkName.split('@').length > 1) {
+      var pages = chunkName.split('@').slice(1);
+      var conditions = [];
+      pages.forEach(function (page) {
+        var pageTemplate = htmlWebpackPlugin.options.liquidTemplates[page];
+        if (typeof pageTemplate !== 'undefined') {
+          if (
+            pageTemplate.includes('customers/') ||
+            pageTemplate.includes('customers\\')
+          ) {
+            conditions.push(
+              "template == 'customers/" + page.split('.').slice(1).join('.') + "'"
+            );
+          } else {
+            conditions.push(
+              "template == '" + page.split('.').slice(1).join('.') + "'"
+            );
+          }
+        } else if (
+          typeof htmlWebpackPlugin.options.liquidLayouts[page] !== 'undefined'
+        ) {
+          conditions.push("layout == '" + page.split('.')[1] + "'");
+        }
+      });
+  
+      createStyles(
+        `if layout ${conditions.join(' or ')}`, 
+        preload, 
+        prefetch
+      );
+
+    } else {
+      %><%= stylesheet %><%
+    }
+  }
+%>
+
+<% styles.forEach(function(condition){ %>
+  {%- <%= condition %> -%}
+    <% if (loadcss[condition]) { %>
+      <%= loadcss[condition].join('\n') %>
     <% } %>
-  <% } else if (typeof htmlWebpackPlugin.options.liquidLayouts[chunkName] !== 'undefined') { %>
-    {%- if layout == '<%= chunkName.split('.')[1] %>' -%}
-      <%= preload %>
-    {%- endif -%}
-  <% } else if (chunkName.split('@').length > 1) { %>
-    <% var pages = chunkName.split('@').slice(1) %>
-    <% var conditions = [] %>
-    <% pages.forEach(function(page){ %>
-      <% var pageTemplate = htmlWebpackPlugin.options.liquidTemplates[page] %>
-      <% if (typeof pageTemplate !== 'undefined') { %>
-        <% if (pageTemplate.includes('customers/') || pageTemplate.includes('customers\\')) { %>
-          <% conditions.push("template == 'customers/" + page.split('.').slice(1).join('.') + "'") %>
-        <% } else { %>
-          <% conditions.push("template == '" + page.split('.').slice(1).join('.') + "'") %>
-        <% } %>
-      <% } else if (typeof htmlWebpackPlugin.options.liquidLayouts[page] !== 'undefined') { %>
-        <% conditions.push("layout == '" + page.split('.')[1] + "'") %>
-      <% } %>
-    <% }); %>
-    {%- if <%= conditions.join(' or ') %> -%}
-      <%= preload %>
-    {%- else -%}
-      <%= prefetch %>
-    {%- endif -%}
-  <% } else { %>
-    <link type="text/css" href="<%= src %>" rel="stylesheet">
-  <% } %>
-<% } %>
+    <% if (fetchcss[condition]) { %>
+      <!-- 
+      // Hiding prefetch options in preference of other methods. (ex. Quicklinks)
+      {%- elsif -%}
+        <%= fetchcss[condition].join('\n') %>
+      -->
+    <% } %>
+  {%- endif -%}
+<% }); %>

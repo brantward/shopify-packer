@@ -8,6 +8,8 @@ const config = new PackerConfig(require('../../../packer.schema'));
 const development = process.env.NODE_ENV !== 'production';
 const getLayoutEntrypoints = require('../../utilities/get-layout-entrypoints');
 const getTemplateEntrypoints = require('../../utilities/get-template-entrypoints');
+const getCritLayoutEntrypoints = require('../../utilities/get-crit-css-layout-entrypoints');
+const getCritTemplateEntrypoints = require('../../utilities/get-crit-css-template-entrypoints');
 const {customConfigCheck} = require('../custom');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const core = require('../parts/core');
@@ -20,10 +22,14 @@ const copy = require('../parts/copy');
 const mergeDev = customConfigCheck(config.get('merge.dev'));
 config.set('files.layout', getLayoutEntrypoints());
 config.set('files.template', getTemplateEntrypoints());
+config.set('files.crit.layout', getCritLayoutEntrypoints());
+config.set('files.crit.template', getCritTemplateEntrypoints());
 
 core.entry = {
   ...config.get('files.layout'),
   ...config.get('files.template'),
+  ...config.get('files.crit.layout'),
+  ...config.get('files.crit.template'),
   ...config.get('entrypoints'),
 };
 
@@ -97,6 +103,8 @@ module.exports = merge([
         isDevServer: development,
         liquidTemplates: config.get('files.template'),
         liquidLayouts: config.get('files.layout'),
+        criticalTemplates: config.get('files.crit.template'),
+        criticalLayouts: config.get('files.crit.layout'),
       }),
 
       // new HtmlWebpackTagsPlugin({
