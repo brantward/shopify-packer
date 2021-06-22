@@ -8,7 +8,7 @@ const axios = require('axios');
 const tempFiles = [];
 
 async function init(args) {
-  args.repo = args.repo ? args.repo : 'hayes0724/packer-blank-theme';
+  args.repo = args.repo ? args.repo : 'brantward/blankit';
   const cmd = args._;
   if (cmd.length < 2) {
     throw console.log(chalk.red('Please include a directory to install in'));
