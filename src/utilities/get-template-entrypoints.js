@@ -27,7 +27,7 @@ const VALID_LIQUID_TEMPLATES = [
 ];
 
 function isValidTemplate(filename) {
-  const name = VALID_LIQUID_TEMPLATES.filter((template) =>
+  const name = VALID_LIQUID_TEMPLATES.some((template) =>
     filename.startsWith(`${template}.`)
   );
   return Boolean(name);
@@ -43,7 +43,7 @@ module.exports = function () {
       `${name}.js`
     );
 
-    if (isValidTemplate(name) && fs.existsSync(jsFile)) {
+    if (isValidTemplate(file) && fs.existsSync(jsFile)) {
       entrypoints[`template.${name}`] = jsFile;
     }
   });
@@ -57,7 +57,7 @@ module.exports = function () {
       `${name}.js`
     );
 
-    if (isValidTemplate(name) && fs.existsSync(jsFile)) {
+    if (isValidTemplate(file) && fs.existsSync(jsFile)) {
       entrypoints[`template.${name}`] = jsFile;
     }
   });
