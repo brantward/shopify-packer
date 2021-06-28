@@ -24,6 +24,7 @@ const core = require('../parts/core');
 const css = require('../parts/css');
 const scss = require('../parts/scss');
 const assets = require('../parts/assets');
+const liquid = require('../parts/liquid');
 const copy = require('../parts/copy');
 const optimization = require('../parts/optimization');
 //const liquidStyles = require('../parts/liquid-styles');
@@ -43,6 +44,7 @@ const output = merge([
   assets,
   scss,
   css,
+  liquid,
   copy,
   {
     mode: 'production',
@@ -58,7 +60,7 @@ const output = merge([
       }),
 
       // new MiniCssExtractPlugin({
-      //   filename: '[name].oo.css',
+      //   filename: '[name].css',
       // }),
 
       new MiniCssExtractPlugin({

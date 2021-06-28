@@ -15,6 +15,7 @@ const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const core = require('../parts/core');
 const css = require('../parts/css');
 const scss = require('../parts/scss');
+const liquid = require('../parts/liquid');
 const assets = require('../parts/assets');
 //const liquidStyles = require('../parts/liquid-styles');
 const copy = require('../parts/copy');
@@ -45,6 +46,7 @@ module.exports = merge([
   assets,
   scss,
   css,
+  liquid,
   copy,
   {
     mode: 'development',
