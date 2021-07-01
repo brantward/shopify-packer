@@ -27,8 +27,10 @@ function generateHtmlPlugins(templateDir) {
           collapseWhitespace: true,
           removeAttributeQuotes: false,
           preserveLineBreaks: false,
-          ignoreCustomFragments: [/{%[-\s]*liquid[\s\S]*?%}/],
-          processScripts: ['application/ld+json'],
+          ignoreCustomFragments: [/{%[\s\S]*?%}/],
+          trimCustomFragments: false,
+          processScripts: ['text/javascript', 'application/ld+json'],
+          removeScriptTypeAttributes: true,
         },
       });
     });
@@ -37,8 +39,6 @@ function generateHtmlPlugins(templateDir) {
 const liquid = {
   plugins: [].concat(
     generateHtmlPlugins('layout'),
-    generateHtmlPlugins('templates'),
-    generateHtmlPlugins('customers'),
     generateHtmlPlugins('snippets'),
     generateHtmlPlugins('sections')
   ),

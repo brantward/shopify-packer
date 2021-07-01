@@ -86,7 +86,7 @@
         templateName = `customers/${templateName}`;
       }
       createScripts(
-        `if '${templateName}'`, 
+        `if template == '${templateName}'`, 
         javascript, 
         prefetch
       );

@@ -34,11 +34,11 @@ core.entry = {
   ...config.get('entrypoints'),
 };
 
-Object.keys(core.entry).forEach((name) => {
-  core.entry[name] = [path.join(__dirname, '../hot-client.js')].concat(
-    core.entry[name]
-  );
-});
+// Object.keys(core.entry).forEach((name) => {
+//   core.entry[name] = [path.join(__dirname, '../hot-client.js')].concat(
+//     core.entry[name]
+//   );
+// });
 
 module.exports = merge([
   //liquidStyles,
@@ -50,20 +50,9 @@ module.exports = merge([
   copy,
   {
     mode: 'development',
+    watch: true,
     devtool: 'eval-source-map',
     target: 'web',
-    optimization: {
-      runtimeChunk: 'single',
-    },
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          exclude: config.get('commonExcludes'),
-          loader: path.resolve(__dirname, '../hmr-alamo-loader.js'),
-        },
-      ],
-    },
     plugins: [
       new CleanWebpackPlugin({
         dry: false,
@@ -77,7 +66,7 @@ module.exports = merge([
         'process.env': {NODE_ENV: '"development"'},
       }),
 
-      new webpack.HotModuleReplacementPlugin(),
+      // new webpack.HotModuleReplacementPlugin(),
 
       new HtmlWebpackPlugin({
         excludeChunks: ['static'],
@@ -86,7 +75,11 @@ module.exports = merge([
         inject: false,
         minify: {
           removeComments: true,
+          collapseWhitespace: true,
           removeAttributeQuotes: false,
+          preserveLineBreaks: false,
+          ignoreCustomFragments: [/{%[\s\S]*?%}/],
+          trimCustomFragments: true,
         },
         isDevServer: development,
         liquidTemplates: config.get('files.template'),
@@ -100,7 +93,11 @@ module.exports = merge([
         inject: false,
         minify: {
           removeComments: true,
+          collapseWhitespace: true,
           removeAttributeQuotes: false,
+          preserveLineBreaks: false,
+          ignoreCustomFragments: [/{%[\s\S]*?%}/],
+          trimCustomFragments: true,
         },
         isDevServer: development,
         liquidTemplates: config.get('files.template'),
