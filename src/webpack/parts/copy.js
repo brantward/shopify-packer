@@ -7,6 +7,10 @@ const copy = {
     new CopyWebpackPlugin({
       patterns: [
         {
+          from: `${config.get('root')}/.shopifyignore`,
+          to: `${config.get('theme.dist.root')}/[name][ext]`,
+        },
+        {
           from: config.get('theme.src.assets'),
           to: `${config.get('theme.dist.assets')}/[name][ext]`,
         },
