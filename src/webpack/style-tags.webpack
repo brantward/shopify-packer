@@ -35,7 +35,7 @@
       var src = `{{ '${basename}' | asset_url }}`;
     }
   
-    var stylesheet = `<link rel="stylesheet" href="${src}" type="text/css">`;
+    var stylesheet = `<link rel="stylesheet" href="${src}" type="text/css" media="all">`;
     var prefetch = `<link rel="prefetch" href="${src}" as="style">`;
     var preload = `<link rel="preload" href="${src}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${src}"></noscript>`;
     var inline = compilation.assets[cssFile.substr(htmlWebpackPlugin.files.publicPath.length)].source().trim();
@@ -88,7 +88,7 @@
 
       createStyles(
         `if layout == '${chunkName.split('.')[1]}'`, 
-        preload
+        stylesheet
       );
 
     } else if (chunkName.split('@').length > 1) {
