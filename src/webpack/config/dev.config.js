@@ -2,35 +2,44 @@ const path = require('path');
 const webpack = require('webpack');
 const {merge} = require('webpack-merge');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackTagsPlugin = require('html-webpack-tags-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const PackerConfig = require('../../config');
 const config = new PackerConfig(require('../../../packer.schema'));
 const development = process.env.NODE_ENV !== 'production';
+const {customConfigCheck} = require('../custom');
+
 const getLayoutEntrypoints = require('../../utilities/get-layout-entrypoints');
 const getTemplateEntrypoints = require('../../utilities/get-template-entrypoints');
+const getSectionEntrypoints = require('../../utilities/get-section-entrypoints');
 const getCritLayoutEntrypoints = require('../../utilities/get-crit-css-layout-entrypoints');
 const getCritTemplateEntrypoints = require('../../utilities/get-crit-css-template-entrypoints');
-const {customConfigCheck} = require('../custom');
-const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const getCritSectionEntrypoints = require('../../utilities/get-crit-css-section-entrypoints');
+config.set('files.layout', getLayoutEntrypoints());
+config.set('files.template', getTemplateEntrypoints());
+config.set('files.section', getSectionEntrypoints());
+config.set('files.crit.layout', getCritLayoutEntrypoints());
+config.set('files.crit.template', getCritTemplateEntrypoints());
+config.set('files.crit.section', getCritSectionEntrypoints());
+
+// Parts
 const core = require('../parts/core');
 const css = require('../parts/css');
 const scss = require('../parts/scss');
-const liquid = require('../parts/liquid');
 const assets = require('../parts/assets');
-//const liquidStyles = require('../parts/liquid-styles');
+const liquid = require('../parts/liquid');
 const copy = require('../parts/copy');
+//const liquidStyles = require('../parts/liquid-styles');
 
 const mergeDev = customConfigCheck(config.get('merge.dev'));
-config.set('files.layout', getLayoutEntrypoints());
-config.set('files.template', getTemplateEntrypoints());
-config.set('files.crit.layout', getCritLayoutEntrypoints());
-config.set('files.crit.template', getCritTemplateEntrypoints());
 
 core.entry = {
   ...config.get('files.layout'),
   ...config.get('files.template'),
+  ...config.get('files.section'),
   ...config.get('files.crit.layout'),
   ...config.get('files.crit.template'),
+  ...config.get('files.crit.section'),
   ...config.get('entrypoints'),
 };
 
@@ -68,16 +77,27 @@ module.exports = merge([
 
       // new webpack.HotModuleReplacementPlugin(),
 
+      new MiniCssExtractPlugin({
+        filename: (chunkData) => {
+          //console.log(chunkData.chunk);
+          const criticalNamespace = '.critical';
+          return chunkData.chunk.runtime.includes(criticalNamespace)
+            ? `../.ignore/[name].min.css`
+            : `[name].min.css`;
+        },
+      }),
+
       new HtmlWebpackPlugin({
         excludeChunks: ['static'],
         filename: `${config.get('theme.dist.snippets')}/script-tags.liquid`,
         template: path.resolve(__dirname, '../script-tags.webpack'),
         inject: false,
+        showErrors: true,
         minify: {
           removeComments: true,
           collapseWhitespace: true,
           removeAttributeQuotes: false,
-          preserveLineBreaks: false,
+          preserveLineBreaks: true,
           ignoreCustomFragments: [/{%[\s\S]*?%}/],
           trimCustomFragments: true,
         },
@@ -95,21 +115,16 @@ module.exports = merge([
           removeComments: true,
           collapseWhitespace: true,
           removeAttributeQuotes: false,
-          preserveLineBreaks: false,
+          preserveLineBreaks: true,
           ignoreCustomFragments: [/{%[\s\S]*?%}/],
           trimCustomFragments: true,
         },
         isDevServer: development,
-        liquidTemplates: config.get('files.template'),
-        liquidLayouts: config.get('files.layout'),
         criticalTemplates: config.get('files.crit.template'),
         criticalLayouts: config.get('files.crit.layout'),
+        liquidTemplates: config.get('files.template'),
+        liquidLayouts: config.get('files.layout'),
       }),
-
-      // new HtmlWebpackTagsPlugin({
-      //   links: ['layout.theme.styleLiquid.css'],
-      //   append: true,
-      // }),
     ],
   },
   mergeDev,

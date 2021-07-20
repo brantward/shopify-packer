@@ -14,41 +14,8 @@ module.exports = {
   'merge.dev': (config) => path.join(config.get('root'), 'dev.config.js'),
   'merge.prod': (config) => path.join(config.get('root'), 'prod.config.js'),
 
-  // Path to self-signed SSL certificate which is used when developing
-  // (browsersync, asset server) to avoid browsers rejecting requests based
-  // on SSL
-  'ssl.cert': path.resolve(os.homedir(), '.localhost_ssl/cert.crt'),
-
-  // Path to self-signed SSL key which is used when developing
-  // (browsersync, asset server) to avoid browsers rejecting requests based
-  // on SSL
-  'ssl.key': path.resolve(os.homedir(), '.localhost_ssl/cert.key'),
-
-  /* SSL CA */
-  'ssl.ca.key': path.resolve(os.homedir(), '.localhost_ssl/ca.key'),
-  'ssl.ca.cert': path.resolve(os.homedir(), '.localhost_ssl/ca.crt'),
-
   /* PostCSS */
   postcss: (config) => path.join(config.get('root'), 'postcss.config.js'),
-
-  /* ESLint */
-  'eslint.bin': () => path.resolve(__dirname, '../../node_modules/.bin/eslint'),
-  'eslint.schema': (config) => path.join(config.get('root'), '.eslintrc'),
-  'eslint.ignore': (config) => path.join(config.get('root'), '.eslintignore'),
-
-  /* Prettier */
-  'prettier.bin': () =>
-    path.resolve(__dirname, '../../node_modules/.bin/prettier'),
-  'prettier.schema': (config) => path.join(config.get('root'), '.prettierrc'),
-  'prettier.ignore': (config) =>
-    path.join(config.get('root'), '.prettierignore'),
-
-  /* Stylelint */
-  'stylelint.bin': () =>
-    path.resolve(__dirname, '../../node_modules/.bin/stylelint'),
-  'stylelint.schema': (config) => path.join(config.get('root'), '.stylelintrc'),
-  'stylelint.ignore': (config) =>
-    path.join(config.get('root'), '.stylelintignore'),
 
   /* Theme path settings */
   /* src folder */

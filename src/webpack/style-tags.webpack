@@ -25,19 +25,21 @@
     var chunkName = basename
       .replace('.scss', '')
       .replace('.css', '')
+      .replace('.min', '')
       .replace('.styleLiquid', '');
-    var critChunkName = chunkName.replace('.critical', '');
     var isLiquidStyle = /.liquidStyle.css$/.test(basename);
-  
-    if (htmlWebpackPlugin.options.isDevServer === true && !basename.includes('.styleLiquid')) {
-      var src = cssFile;
-    } else {
-      var src = `{{ '${basename}' | asset_url }}`;
+    var isSectionStyle = /^section./.test(basename);
+
+    if (isSectionStyle) {
+      continue;
     }
-  
-    var stylesheet = `<link rel="stylesheet" href="${src}" type="text/css" media="all">`;
-    var prefetch = `<link rel="prefetch" href="${src}" as="style">`;
-    var preload = `<link rel="preload" href="${src}" as="style" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="${src}"></noscript>`;
+
+    var src = `{{ '${basename}' | asset_url }}`;
+
+    var stylesheet = `{{ '${basename}' | asset_url | stylesheet_tag }}`;
+    var prefetch = `<link rel="prefetch" href="{{ '${basename}' | asset_url }}" as="style">`;
+    var async = `<link rel="stylesheet" href="{{ '${basename}' | asset_url }}" media="print" onload="this.media='all'">\n<noscript>{{ '${basename}' | asset_url | stylesheet_tag }}</noscript>`
+    var preload = `<link rel="preload" href="{{ '${basename}' | asset_url }}" as="style" onload="this.onload=null;this.rel='stylesheet'">\n<noscript>{{ '${basename}' | asset_url | stylesheet_tag }}</noscript>`;
     var inline = compilation.assets[cssFile.substr(htmlWebpackPlugin.files.publicPath.length)].source().trim();
     if (inline.length) {
       inline = `<style>${inline}</style>`;
@@ -54,12 +56,13 @@
 
       var chunkTemplate = htmlWebpackPlugin.options.criticalTemplates[chunkName].import;
       var templateName = chunkName.split('.').slice(1, -1).join('.');
-
-      if (
-        chunkTemplate.includes('customers/') ||
-        chunkTemplate.includes('customers\\')
-      ) {
-        var templateName = `customers/${templateName}`;
+      if (typeof chunkTemplate !== 'undefined') {
+        if (
+          chunkTemplate.includes('customers/') ||
+          chunkTemplate.includes('customers\\')
+        ) {
+          var templateName = `customers/${templateName}`;
+        }
       }
       
       createStyles(
@@ -70,17 +73,18 @@
     } else if (typeof htmlWebpackPlugin.options.liquidTemplates[chunkName] !== 'undefined') {
       var chunkTemplate = htmlWebpackPlugin.options.liquidTemplates[chunkName];
       var templateName = chunkName.split('.').slice(1).join('.');
-
-      if (
-        chunkTemplate.includes('customers/') ||
-        chunkTemplate.includes('customers\\')
-      ) {
-        var templateName = `customers/${templateName}`;
+      if (typeof chunkTemplate !== 'undefined') {
+        if (
+          chunkTemplate.includes('customers/') ||
+          chunkTemplate.includes('customers\\')
+        ) {
+          var templateName = `customers/${templateName}`;
+        }
       }
   
       createStyles(
         `if template == '${templateName}'`, 
-        preload, 
+        async, 
         prefetch
       );
 
@@ -118,7 +122,7 @@
   
       createStyles(
         `if layout ${conditions.join(' or ')}`, 
-        preload, 
+        async, 
         prefetch
       );
 

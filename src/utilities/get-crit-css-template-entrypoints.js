@@ -52,13 +52,13 @@ module.exports = function () {
     path.join(config.get('theme.src.styles'), 'templates')
   ).forEach((file) => {
     const name = path.parse(file).name;
-    const cssFile = path.join(
-      config.get('theme.src.styles'),
-      'templates',
-      `${name}.scss`
-    );
 
     if (isValidTemplate(file) && name.includes('.critical')) {
+      const cssFile = path.join(
+        config.get('theme.src.styles'),
+        'templates',
+        `${name}.scss`
+      );
       entrypoints[`template.${name}`] = entrypointSettings(cssFile);
     }
   });
@@ -67,14 +67,14 @@ module.exports = function () {
     path.join(config.get('theme.src.styles'), 'templates/customers')
   ).forEach((file) => {
     const name = `${path.parse(file).name}`;
-    const cssFile = path.join(
-      config.get('theme.src.styles'),
-      'templates',
-      'customers',
-      `${name}.scss`
-    );
 
     if (isValidTemplate(file) && name.includes('.critical')) {
+      const cssFile = path.join(
+        config.get('theme.src.styles'),
+        'templates',
+        'customers',
+        `${name}.scss`
+      );
       entrypoints[`template.${name}`] = entrypointSettings(cssFile);
     }
   });

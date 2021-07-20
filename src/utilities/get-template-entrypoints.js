@@ -37,28 +37,32 @@ module.exports = function () {
   const entrypoints = {};
   fs.readdirSync(config.get('theme.src.templates')).forEach((file) => {
     const name = path.parse(file).name;
-    const jsFile = path.join(
-      config.get('theme.src.scripts'),
-      'templates',
-      `${name}.js`
-    );
+    if (!name.includes('.critical')) {
+      const jsFile = path.join(
+        config.get('theme.src.scripts'),
+        'templates',
+        `${name}.js`
+      );
 
-    if (isValidTemplate(file) && fs.existsSync(jsFile)) {
-      entrypoints[`template.${name}`] = jsFile;
+      if (isValidTemplate(file) && fs.existsSync(jsFile)) {
+        entrypoints[`template.${name}`] = jsFile;
+      }
     }
   });
 
   fs.readdirSync(config.get('theme.src.customers')).forEach((file) => {
     const name = `${path.parse(file).name}`;
-    const jsFile = path.join(
-      config.get('theme.src.scripts'),
-      'templates',
-      'customers',
-      `${name}.js`
-    );
+    if (!name.includes('.critical')) {
+      const jsFile = path.join(
+        config.get('theme.src.scripts'),
+        'templates',
+        'customers',
+        `${name}.js`
+      );
 
-    if (isValidTemplate(file) && fs.existsSync(jsFile)) {
-      entrypoints[`template.${name}`] = jsFile;
+      if (isValidTemplate(file) && fs.existsSync(jsFile)) {
+        entrypoints[`template.${name}`] = jsFile;
+      }
     }
   });
 

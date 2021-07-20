@@ -14,10 +14,10 @@ const copy = {
           from: config.get('theme.src.assets'),
           to: `${config.get('theme.dist.assets')}/[name][ext]`,
         },
-        // {
-        //   from: config.get('theme.src.layout'),
-        //   to: `${config.get('theme.dist.layout')}`,
-        // },
+        {
+          from: config.get('theme.src.layout'),
+          to: `${config.get('theme.dist.layout')}`,
+        },
         {
           from: config.get('theme.src.config'),
           to: `${config.get('theme.dist.config')}`,

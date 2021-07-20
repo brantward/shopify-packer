@@ -1,5 +1,4 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-
 const isDev = process.env.NODE_ENV !== 'production';
 
 const part = {
@@ -11,11 +10,6 @@ const part = {
 
 const sassRule = {
   test: /\.s[ac]ss$/,
-};
-
-const styleLoader = {
-  loader: 'style-loader',
-  options: {},
 };
 
 const cssLoader = {
@@ -34,8 +28,6 @@ const postcssLoader = {
   },
 };
 
-// const cssVarLoader = {loader: '@shopify/slate-cssvar-loader'};
-
 const sassLoader = {
   loader: 'sass-loader',
   options: {
@@ -48,7 +40,7 @@ const sassLoader = {
 };
 
 sassRule.use = [
-  ...(isDev ? [styleLoader] : [MiniCssExtractPlugin.loader]),
+  MiniCssExtractPlugin.loader,
   cssLoader,
   postcssLoader,
   sassLoader,

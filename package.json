@@ -1,134 +1,47 @@
 {
-  "release" : {
-    "plugins" : [
-      "@semantic-release\/commit-analyzer",
-      "@semantic-release\/release-notes-generator",
-      "@semantic-release\/npm",
-      "@semantic-release\/github",
-      [
-        "@semantic-release\/changelog",
-        {
-          "changelogFile" : "CHANGELOG.md"
-        }
-      ],
-      [
-        "@semantic-release\/git",
-        {
-          "assets" : [
-            "package.json",
-            "package-lock.json",
-            "CHANGELOG.md"
-          ],
-          "message" : "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
-        }
-      ]
-    ]
+  "bin": {
+    "packer": "cli/index.js"
   },
-  "optionalDependencies" : {
-
-  },
-  "bin" : {
-    "packer" : "cli\/index.js"
-  },
-  "browserslist" : [
+  "browserslist": [
     "defaults"
   ],
-  "dependencies" : {
-    "sass" : "^1.35.1",
-    "archiver" : "^5.3.0",
-    "mkcert" : "^1.4.0",
-    "express" : "^4.17.1",
-    "webpack-dev-server" : "^3.11.2",
-    "stylelint" : "^13.12.0",
-    "webpack-bundle-analyzer" : "^4.4.2",
-    "file-loader" : "^6.2.0",
-    "html-webpack-tags-plugin" : "^3.0.1",
-    "ip" : "^1.1.5",
-    "figlet" : "^1.4.0",
-    "@babel\/core" : "^7.13.10",
-    "prettier" : "^2.3.1",
-    "@shopify\/themekit" : "^1.1.7",
-    "minimatch" : "^3.0.4",
-    "axios" : "^0.21.1",
-    "fs-extra" : "^10.0.0",
-    "stylelint-webpack-plugin" : "^2.2.0",
-    "chalk" : "latest",
-    "tapable" : "^2.0.0",
-    "fibers" : "^5.0.0",
-    "clean-webpack-plugin" : "^4.0.0-alpha.0",
-    "webpack-hot-middleware" : "^2.25.0",
-    "inquirer" : "^8.1.1",
-    "cors" : "^2.8.5",
-    "browser-sync" : "^2.26.14",
-    "eslint" : "^7.28.0",
-    "portscanner" : "^2.2.0",
-    "minimist" : "^1.2.5",
-    "download" : "^8.0.0",
-    "console-control-strings" : "^1.1.0",
-    "babel-loader" : "^8.2.2",
-    "figures" : "^3.2.0",
-    "webpack-cli" : "^4.7.2",
-    "webpack-dev-middleware" : "^5.0.0",
-    "copy-webpack-plugin" : "^9.0.0",
-    "sass-loader" : "^12.1.0",
-    "webpack-merge" : "^5.8.0",
-    "table" : "^6.0.7",
-    "postcss-loader" : "^6.1.0",
-    "crypto" : "^1.0.1",
-    "postcss" : "^8.3.4",
-    "html-webpack-plugin" : "^5.3.1",
-    "extract-zip" : "^2.0.1",
-    "webpack" : "^5.39.0",
-    "style-loader" : "^2.0.0",
-    "array-flatten" : "^3.0.0",
-    "css-loader" : "^5.2.6",
-    "ora" : "^5.4.1",
-    "url-loader" : "^4.1.1",
-    "mini-css-extract-plugin" : "^1.6.0",
-    "yargs" : "^17.0.1"
+  "dependencies": {
+    "@babel/core": "^7.13.10",
+    "babel-loader": "^8.2.2",
+    "chalk": "latest",
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "console-control-strings": "^1.1.0",
+    "copy-webpack-plugin": "^9.0.0",
+    "crypto": "^1.0.1",
+    "css-loader": "^5.2.6",
+    "fibers": "^5.0.0",
+    "html-webpack-plugin": "^5.3.1",
+    "mini-css-extract-plugin": "^1.6.0",
+    "minimist": "^1.2.5",
+    "ora": "^5.4.1",
+    "postcss": "^8.3.4",
+    "postcss-loader": "^6.1.0",
+    "sass": "^1.35.1",
+    "sass-loader": "^12.1.0",
+    "webpack": "^5.39.0",
+    "webpack-bundle-analyzer": "^4.4.2",
+    "webpack-merge": "^5.8.0"
   },
-  "engines" : {
-    "node" : ">=10.13.0"
+  "engines": {
+    "node": ">=10.13.0"
   },
-  "devDependencies" : {
-    "babel-jest" : "^26.3.0",
-    "semantic-release" : "^17.4.2",
-    "conventional-changelog" : "^3.1.23",
-    "eslint-config-prettier" : "^8.1.0",
-    "lerna-changelog" : "^1.0.1",
-    "eslint-plugin-prettier" : "^3.3.1",
-    "jest" : "^26.4.2",
-    "@semantic-release\/changelog" : "^5.0.1",
-    "@semantic-release\/git" : "^9.0.0",
-    "mock-fs" : "^4.13.0",
-    "eslint-plugin-node" : "^11.1.0",
-    "prettier-eslint" : "^12.0.0"
+  "name": "@hayes0724/shopify-packer",
+  "license": "MIT",
+  "bugs": "https://github.com/hayes0724/shopify-packer/issues",
+  "homepage": "https://hayes0724.github.io/shopify-packer/",
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "es5",
+    "bracketSpacing": false
   },
-  "name" : "@hayes0724\/shopify-packer",
-  "license" : "MIT",
-  "bugs" : "https:\/\/github.com\/hayes0724\/shopify-packer\/issues",
-  "homepage" : "https:\/\/hayes0724.github.io\/shopify-packer\/",
-  "prettier" : {
-    "singleQuote" : true,
-    "trailingComma" : "es5",
-    "bracketSpacing" : false
-  },
-  "repository" : "https:\/\/github.com\/hayes0724\/shopify-packer.git",
-  "scripts" : {
-    "docs:start" : "cd docs && yarn start",
-    "test" : "jest",
-    "semantic-release" : "semantic-release",
-    "docs" : "cd docs && yarn deploy",
-    "lint" : "eslint --ext .js src\/** cli\/**",
-    "lint:fix" : "eslint --ext .js --fix src\/** cli\/**"
-  },
-  "publishConfig" : {
-    "tag" : "latest",
-    "registry" : "https:\/\/registry.npmjs.org\/",
-    "access" : "public"
-  },
-  "version" : "2.2.0",
-  "keywords" : [
+  "repository": "https://github.com/hayes0724/shopify-packer.git",
+  "version": "2.2.0",
+  "keywords": [
     "shopify",
     "deployment",
     "webpack",
@@ -136,20 +49,5 @@
     "slate",
     "babel"
   ],
-  "changelog" : {
-    "repo" : "@hayes0724\/shopify-packer",
-    "labels" : {
-      "build" : ":memo: Build",
-      "feat" : ":rocket: Feature",
-      "test" : ":memo: Tests",
-      "docs" : ":memo: Documentation",
-      "style" : ":memo: Style",
-      "config" : ":wrench Config",
-      "fix" : ":bug: Bug Fix",
-      "internal" : ":house: Internal",
-      "refactor" : ":memo: Refactor"
-    },
-    "cacheDir" : ".changelog"
-  },
-  "author" : "eric hayes <eric@hayesmarketing.io>"
+  "author": "eric hayes <eric@hayesmarketing.io>"
 }

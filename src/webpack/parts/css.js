@@ -13,11 +13,6 @@ const cssRule = {
   test: /\.css$/,
 };
 
-const styleLoader = {
-  loader: 'style-loader',
-  options: {},
-};
-
 const cssLoader = {
   loader: 'css-loader',
   // Enabling sourcemaps in styles when using HMR causes style-loader to inject
@@ -38,13 +33,7 @@ const postcssLoader = {
   },
 };
 
-// const cssVarLoader = {loader: '@shopify/slate-cssvar-loader'};
-
-cssRule.use = [
-  ...(isDev ? [styleLoader] : [MiniCssExtractPlugin.loader]),
-  cssLoader,
-  postcssLoader,
-];
+cssRule.use = [MiniCssExtractPlugin.loader, cssLoader, postcssLoader];
 part.module.rules.push(cssRule);
 
 module.exports = part;

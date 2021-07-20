@@ -7,16 +7,16 @@ const config = new PackerConfig(require('../../packer.schema'));
 module.exports = function () {
   const entrypoints = {};
 
-  fs.readdirSync(config.get('theme.src.layout')).forEach((file) => {
+  fs.readdirSync(config.get('theme.src.sections')).forEach((file) => {
     const name = path.parse(file).name;
     if (!name.includes('.critical')) {
       const jsFile = path.join(
         config.get('theme.src.scripts'),
-        'layout',
+        'sections',
         `${name}.js`
       );
       if (fs.existsSync(jsFile)) {
-        entrypoints[`layout.${name}`] = jsFile;
+        entrypoints[`section.${name}`] = jsFile;
       }
     }
   });

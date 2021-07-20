@@ -6,7 +6,7 @@ const core = {
   context: config.get('root'),
 
   output: {
-    filename: '[name].js',
+    filename: '[name].min.js',
     path: config.get('theme.dist.assets'),
     clean: true,
   },

@@ -20,11 +20,20 @@
   
   for (var chunk in htmlWebpackPlugin.files.js) {
     var jsFile = htmlWebpackPlugin.files.js[chunk];
-    var entry = htmlWebpackPlugin.files.js[chunk].split('/').reverse()[0].replace('.js', '');
+    var basename = jsFile.split('/').reverse()[0];
+    var entry = basename
+      .replace('.min', '')
+      .replace('.js', '');
+
+    var isSectionScript = /^section./.test(basename);
+
+    if (isSectionScript) {
+      continue;
+    }
     if (htmlWebpackPlugin.options.isDevServer === true) {
       var src = htmlWebpackPlugin.files.js[chunk];
+      var src = `{{ '${basename}' | asset_url }}`;
     } else {
-      var basename = htmlWebpackPlugin.files.js[chunk].split('/').reverse()[0];
       var src = `{{ '${basename}' | asset_url }}`;
     }
     

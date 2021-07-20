@@ -19,17 +19,17 @@ function entrypointSettings(file) {
 module.exports = function () {
   const entrypoints = {};
 
-  fs.readdirSync(path.join(config.get('theme.src.styles'), 'layout')).forEach(
+  fs.readdirSync(path.join(config.get('theme.src.styles'), 'sections')).forEach(
     (file) => {
       const name = path.parse(file).name;
 
       if (name.includes('.critical')) {
         const cssFile = path.join(
           config.get('theme.src.styles'),
-          'layout',
+          'sections',
           `${name}.scss`
         );
-        entrypoints[`layout.${name}`] = entrypointSettings(cssFile);
+        entrypoints[`section.${name}`] = entrypointSettings(cssFile);
       }
     }
   );
