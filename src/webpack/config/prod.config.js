@@ -49,7 +49,7 @@ const output = merge([
   assets,
   scss,
   css,
-  liquid,
+  //liquid,
   copy,
   {
     mode: 'production',

@@ -26,18 +26,18 @@ const copy = {
           from: config.get('theme.src.locales'),
           to: `${config.get('theme.dist.locales')}`,
         },
-        // {
-        //   from: config.get('theme.src.snippets'),
-        //   to: `${config.get('theme.dist.snippets')}`,
-        // },
+        {
+          from: config.get('theme.src.snippets'),
+          to: `${config.get('theme.dist.snippets')}`,
+        },
         {
           from: config.get('theme.src.templates'),
           to: `${config.get('theme.dist.templates')}`,
         },
-        // {
-        //   from: config.get('theme.src.sections'),
-        //   to: `${config.get('theme.dist.sections')}`,
-        // },
+        {
+          from: config.get('theme.src.sections'),
+          to: `${config.get('theme.dist.sections')}`,
+        },
       ],
     }),
   ],
