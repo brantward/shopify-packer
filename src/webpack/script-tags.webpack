@@ -19,7 +19,7 @@
   }
   
   for (var chunk in htmlWebpackPlugin.files.js) {
-    var jsFile = htmlWebpackPlugin.files.js[chunk];
+    var jsFile = htmlWebpackPlugin.files.js[chunk].split("%40").join("@");
     var basename = jsFile.split('/').reverse()[0];
     var entry = basename
       .replace('.min', '')
@@ -39,9 +39,9 @@
     
     var javascript = `<script src="${src}" defer></script>`;
     var prefetch = `<link rel="prefetch" href="${src}" as="script">`;
-    var inline = compilation.assets[jsFile.substr(htmlWebpackPlugin.files.publicPath.length)].source().trim();
-    if (inline.length) {
-      inline = `<script>${inline}</script>`;
+    var inlinefile = compilation.assets[jsFile.substr(htmlWebpackPlugin.files.publicPath.length)];
+    if (inlinefile != undefined) {
+      inline = `<script>${inlinefile.source().trim()}</script>`;
     }
 
     if (typeof htmlWebpackPlugin.options.liquidLayouts[entry] !== 'undefined') {
