@@ -33,9 +33,7 @@ const sassLoader = {
   options: {
     sourceMap: isDev,
     implementation: require('sass'),
-    sassOptions: {
-      fiber: require('fibers'),
-    },
+    sassOptions: {},
   },
 };
 
